@@ -4,7 +4,8 @@ import os
 # -----------------------
 # PATHS
 # -----------------------
-BASE_DIR = "/home/rahul/projects/f1-2026-predictions"
+# Use script-relative path
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 OUTPUT_PATH = os.path.join(BASE_DIR, "dataset", "season_dataset.csv")
 
 # -----------------------

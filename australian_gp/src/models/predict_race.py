@@ -1,26 +1,29 @@
 import pandas as pd
 import joblib
+import os
+
+# PATHS
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+MODEL_PATH = os.path.join(BASE_DIR, "models/f1_winner_model.pkl")
+DATA_PATH = os.path.join(BASE_DIR, "data/processed/dataset.csv")
+OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "race_prediction.csv")
 
 # load trained model
-model = joblib.load("models/f1_winner_model.pkl")
+model = joblib.load(MODEL_PATH)
 
-# load feature data (NO race result here)
-practice = pd.read_csv("data/raw/practice_laps.csv")
-quali = pd.read_csv("data/raw/qualifying.csv")
-
-# merge features
-dataset = practice.merge(quali, on="Driver")
+# load feature data
+dataset = pd.read_csv(DATA_PATH)
 
 # features used during training
-X = dataset[
-    [
-        "FP1_avg",
-        "FP2_avg",
-        "FP3_avg",
-        "Q3",
-        "GridPosition"
-    ]
+features = [
+    "Quali_delta",
+    "GridPosition",
+    "Race_pace_norm",
+    "Tyre_deg_norm",
+    "Team_Pace"
 ]
+X = dataset[features]
 
 # predict win probability
 dataset["win_probability"] = model.predict_proba(X)[:, 1]
@@ -41,6 +44,7 @@ print("\nPredicted Winner:")
 print(winner)
 
 # save results
-predictions.to_csv("outputs/race_prediction.csv", index=False)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+predictions.to_csv(OUTPUT_PATH, index=False)
 
-print("\nPredictions saved to outputs/race_prediction.csv")
+print(f"\nPredictions saved to {OUTPUT_PATH}")

@@ -17,3 +17,15 @@ data/processed/
 
 # OS files
 .DS_Store
+
+# FastF1 cache
+**/data/cache/
+*.sqlite
+*.ff1pkl
+
+# LibreOffice lock files
+.~lock*
+
+# Python
+__pycache__/
+*.pyc
