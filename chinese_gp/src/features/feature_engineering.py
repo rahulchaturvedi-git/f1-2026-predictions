@@ -85,7 +85,7 @@ df["Sprint_performance_score"] = df["SprintGrid"] - df["SprintPosition"]
 # MERGE
 df = df.merge(race_pace_df, on="Driver", how="left")
 df = df.merge(tyre_deg_df, on="Driver", how="left")
-df["Pace_Stability"] = 0.0 # Default for CHN
+
 
 # NORMALIZATION
 max_pace = df["Race_pace"].max()
@@ -115,7 +115,7 @@ df.fillna(0, inplace=True)
 df = df[[
     "Driver", "Quali_time", "Quali_delta", "GridPosition",
     "Sprint_performance_score", "Race_pace_norm", "Tyre_deg_norm",
-    "Pace_Stability", "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
+    "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
 ]]
 
 os.makedirs(os.path.dirname(CHN_PROCESSED_PATH), exist_ok=True)

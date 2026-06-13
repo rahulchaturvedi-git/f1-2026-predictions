@@ -77,7 +77,6 @@ rq_feat["GridPosition"] = rq_feat.index + 1
 df = rq_feat.merge(race_pace_df, on="Driver", how="left")
 df = df.merge(tyre_deg_df, on="Driver", how="left")
 df["Sprint_performance_score"] = 0.0
-df["Pace_Stability"] = 0.0 # Default for AUS
 
 # NORMALIZATION
 max_pace = df["Race_pace"].max()
@@ -104,7 +103,7 @@ df.fillna(0, inplace=True)
 df = df[[
     "Driver", "Quali_time", "Quali_delta", "GridPosition",
     "Sprint_performance_score", "Race_pace_norm", "Tyre_deg_norm",
-    "Pace_Stability", "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
+    "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
 ]]
 
 os.makedirs(os.path.dirname(AUS_PROCESSED_PATH), exist_ok=True)

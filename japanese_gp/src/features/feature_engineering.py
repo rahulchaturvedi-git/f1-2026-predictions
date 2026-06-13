@@ -37,21 +37,20 @@ fp_all["LapNumber"] = fp_all.groupby("Driver").cumcount() + 1
 
 def compute_stint_pace(df):
     df = clean_laps(df)
-    pace = {}; stab = {}
+    pace = {}
     for d, g in df.groupby("Driver"):
         g = g.copy()
         g["LapDiff"] = g["LapNumber"].diff().fillna(1)
         g["StintID"] = (g["LapDiff"] > 1).cumsum()
         stints = [s for id, s in g.groupby("StintID") if len(s) >= 5]
         if not stints:
-            pace[d] = g["LapTime"].min(); stab[d] = 1.0
+            pace[d] = g["LapTime"].min()
         else:
             all_l = pd.concat(stints)["LapTime"]
-            pace[d] = all_l.mean(); stab[d] = all_l.std()
-    return (pd.Series(pace, name="Race_pace").rename_axis("Driver"), 
-            pd.Series(stab, name="Pace_Stability").rename_axis("Driver"))
+            pace[d] = all_l.mean()
+    return pd.Series(pace, name="Race_pace").rename_axis("Driver")
 
-pace_s, stab_s = compute_stint_pace(fp_all)
+pace_s = compute_stint_pace(fp_all)
 
 # DEG
 def compute_deg(df):
@@ -76,14 +75,12 @@ rq_feat.rename(columns={"LapTime": "Quali_time"}, inplace=True)
 
 # MERGE FEATURES
 df = rq_feat.merge(pace_s.reset_index(), on="Driver", how="left")
-df = df.merge(stab_s.reset_index(), on="Driver", how="left")
 df = df.merge(deg_s.reset_index(), on="Driver", how="left")
 df["Sprint_performance_score"] = 0.0
 
 # RANK NORMALIZATION
 df["Race_pace_norm"] = df["Race_pace"].rank(ascending=True) / len(df)
 df["Tyre_deg_norm"] = df["Tyre_deg"].rank(ascending=True) / len(df)
-df["Pace_Stability"] = df["Pace_Stability"].rank(ascending=True) / len(df)
 
 # TEAM PACE
 df["Team"] = df["Driver"].map(driver_to_team)
@@ -109,7 +106,7 @@ df.fillna(0, inplace=True)
 df = df[[
     "Driver", "Quali_time", "Quali_delta", "GridPosition",
     "Sprint_performance_score", "Race_pace_norm", "Tyre_deg_norm",
-    "Pace_Stability", "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
+    "Team_Pace", "Prev_Race_Score", "Racecraft", "FinalPosition", "Race"
 ]]
 
 os.makedirs(os.path.dirname(JPN_PROCESSED_PATH), exist_ok=True)
