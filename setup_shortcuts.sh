@@ -3,7 +3,7 @@
 # This script creates aliases for the prediction pipeline.
 # Run it once in your terminal: source setup_shortcuts.sh
 
-gps=("australia" "china" "miami" "japan" "canada")
+gps=("australia" "china" "miami" "japan" "canada" "monaco")
 
 for gp in "${gps[@]}"; do
     alias_name="predict_${gp}_gp"

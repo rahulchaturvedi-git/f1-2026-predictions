@@ -10,7 +10,8 @@ GP_MAP = {
     "china": "chinese_gp",
     "miami": "miami_gp",
     "japan": "japanese_gp",
-    "canada": "canada_gp"
+    "canada": "canada_gp",
+    "monaco": "monaco_gp"
 }
 
 def run_script(script_path):
